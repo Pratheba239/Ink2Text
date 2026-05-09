@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -103,8 +104,14 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
         }
 
-        binding.btnDownloadPdf.setOnClickListener {
-            saveTextAsPdf(binding.tvResult.text.toString())
+        binding.btnShare.setOnClickListener {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, binding.tvResult.text.toString())
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
 
         binding.btnBackToCamera.setOnClickListener {
@@ -253,48 +260,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveTextAsPdf(text: String) {
-        if (text.isEmpty() || text == getString(R.string.recognized_text_placeholder)) {
-            Toast.makeText(this, "No text to save", Toast.LENGTH_SHORT).show()
-            return
-        }
 
-        val pdfDocument = PdfDocument()
-        val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4 size
-        val page = pdfDocument.startPage(pageInfo)
-
-        val canvas = page.canvas
-        val textPaint = TextPaint()
-        textPaint.isAntiAlias = true
-        textPaint.textSize = 14f * resources.displayMetrics.density
-        textPaint.color = Color.BLACK
-
-        val staticLayout = StaticLayout.Builder.obtain(text, 0, text.length, textPaint, 595 - 80) // 40 margin on each side
-            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-            .setLineSpacing(0f, 1f)
-            .setIncludePad(false)
-            .build()
-
-        canvas.save()
-        canvas.translate(40f, 40f) // Margins
-        staticLayout.draw(canvas)
-        canvas.restore()
-
-        pdfDocument.finishPage(page)
-
-        val fileName = "Ink2Text_" + SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".pdf"
-        val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
-
-        try {
-            pdfDocument.writeTo(FileOutputStream(file))
-            Toast.makeText(this, "Saved PDF to: ${file.absolutePath}", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error saving PDF: ${e.message}")
-            Toast.makeText(this, "Error saving PDF", Toast.LENGTH_SHORT).show()
-        } finally {
-            pdfDocument.close()
-        }
-    }
 
     private fun allPermissionsGranted() = ContextCompat.checkSelfPermission(
         this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
