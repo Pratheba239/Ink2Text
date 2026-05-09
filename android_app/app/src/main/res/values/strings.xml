@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Ink2Text</string>
+    <string name="take_photo">Capture</string>
+    <string name="choose_gallery">Library</string>
+    <string name="recognize_text">Start Processing</string>
+    <string name="recognized_text_placeholder">Recognized text will appear here</string>
+    <string name="live_scan_mode">LIVE SCAN MODE</string>
+    <string name="flash">Flash</string>
+    <string name="processing_title">Processing your notes...</string>
+    <string name="processing_desc">Extracting handwritten text using AI to transform your analog ink into searchable digital data.</string>
+    <string name="neural_engine_active">NEURAL ENGINE ACTIVE</string>
+    <string name="mapping_texture">MAPPING TEXTURE</string>
+    <string name="original_ink">ORIGINAL INK</string>
+    <string name="detected_language">DETECTED LANGUAGE</string>
+    <string name="word_count">WORD COUNT</string>
+    <string name="text_editor">Text Editor</string>
+    <string name="download_pdf">Download as PDF</string>
+    <string name="copy_text">Copy Text</string>
+    <string name="share">Share</string>
+</resources>
